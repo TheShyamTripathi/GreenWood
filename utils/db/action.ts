@@ -97,6 +97,23 @@ export async function getOrCreateReward(userId: number) {
   }
 }
 
+export async function updateRewardPoints(userId: number, pointsToAdd: number) {
+  try {
+    const [updatedReward] = await db
+      .update(Rewards)
+      .set({ 
+        points: sql`${Rewards.points} + ${pointsToAdd}`,
+        updatedAt: new Date()
+      })
+      .where(eq(Rewards.userId, userId))
+      .returning()
+      .execute();
+    return updatedReward;
+  } catch (error) {
+    console.error("Error updating reward points:", error);
+    return null;
+  }
+}
 
 export async function createCollectedWaste(reportId: number, collectorId: number, notes?: string) {
   try {
@@ -158,6 +175,71 @@ export async function markNotificationAsRead(notificationId: number) {
     await db.update(Notifications).set({ isRead: true }).where(eq(Notifications.id, notificationId)).execute();
   } catch (error) {
     console.error("Error marking notification as read:", error);
+  }
+}
+
+export async function getPendingReports() {
+  try {
+    return await db.select().from(Reports).where(eq(Reports.status, "pending")).execute();
+  } catch (error) {
+    console.error("Error fetching pending reports:", error);
+    return [];
+  }
+}
+
+export async function updateReportStatus(reportId: number, status: string) {
+  try {
+    const [updatedReport] = await db
+      .update(Reports)
+      .set({ status })
+      .where(eq(Reports.id, reportId))
+      .returning()
+      .execute();
+    return updatedReport;
+  } catch (error) {
+    console.error("Error updating report status:", error);
+    return null;
+  }
+}
+
+export async function getRecentReports(limit: number = 10) {
+  try {
+    const reports = await db
+      .select()
+      .from(Reports)
+      .orderBy(desc(Reports.createdAt))
+      .limit(limit)
+      .execute();
+    return reports;
+  } catch (error) {
+    console.error("Error fetching recent reports:", error);
+    return [];
+  }
+}
+
+export async function getWasteCollectionTasks(limit: number = 20) {
+  try {
+    const tasks = await db
+      .select({
+        id: Reports.id,
+        location: Reports.location,
+        wasteType: Reports.wasteType,
+        amount: Reports.amount,
+        status: Reports.status,
+        date: Reports.createdAt,
+        collectorId: Reports.collectorId,
+      })
+      .from(Reports)
+      .limit(limit)
+      .execute();
+
+    return tasks.map(task => ({
+      ...task,
+      date: task.date.toISOString().split('T')[0], // Format date as YYYY-MM-DD
+    }));
+  } catch (error) {
+    console.error("Error fetching waste collection tasks:", error);
+    return [];
   }
 }
 
@@ -224,6 +306,60 @@ export async function updateTaskStatus(reportId: number, newStatus: string, coll
   }
 }
 
+export async function getAllRewards() {
+  try {
+    const rewards = await db
+      .select({
+        id: Rewards.id,
+        userId: Rewards.userId,
+        points: Rewards.points,
+        level: Rewards.level,
+        createdAt: Rewards.createdAt,
+        userName: Users.name,
+      })
+      .from(Rewards)
+      .leftJoin(Users, eq(Rewards.userId, Users.id))
+      .orderBy(desc(Rewards.points))
+      .execute();
+
+    return rewards;
+  } catch (error) {
+    console.error("Error fetching all rewards:", error);
+    return [];
+  }
+}
+
+export async function getRewardTransactions(userId: number) {
+  try {
+    console.log('Fetching transactions for user ID:', userId)
+    const transactions = await db
+      .select({
+        id: Transactions.id,
+        type: Transactions.type,
+        amount: Transactions.amount,
+        description: Transactions.description,
+        date: Transactions.date,
+      })
+      .from(Transactions)
+      .where(eq(Transactions.userId, userId))
+      .orderBy(desc(Transactions.date))
+      .limit(10)
+      .execute();
+
+    console.log('Raw transactions from database:', transactions)
+
+    const formattedTransactions = transactions.map(t => ({
+      ...t,
+      date: t.date.toISOString().split('T')[0], // Format date as YYYY-MM-DD
+    }));
+
+    console.log('Formatted transactions:', formattedTransactions)
+    return formattedTransactions;
+  } catch (error) {
+    console.error("Error fetching reward transactions:", error);
+    return [];
+  }
+}
 
 export async function getAvailableRewards(userId: number) {
   try {
