@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { getAllRewards, getUserByEmail } from '@/utils/db/actions'
+import { getAllRewards, getUserByEmail } from '@greenwood/utils/db/action'
 import { Loader, Award, User, Trophy, Crown } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 

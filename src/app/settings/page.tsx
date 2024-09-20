@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { User, Mail, Phone, MapPin, Save } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@greenwood/components/ui/button'
 
 type UserSettings = {
   name: string
