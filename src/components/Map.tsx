@@ -5,8 +5,8 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { Leaf } from 'lucide-react'
 import ContractInteraction from './ContractInteraction'
-import { encryptWasteData, submitEncryptedWasteData, performDataAnalysis } from '@/utils/litProtocol'
-import { useSessionSigs } from '@/hooks/useSessionSigs'
+import { encryptWasteData, submitEncryptedWasteData, performDataAnalysis } from '@greenwood/utils/litProtocol'
+import { useSessionSigs } from '@greenwood/hooks/useSessionSigs'
 
 // Custom leaf icon
 const leafIcon = new L.Icon({
@@ -59,7 +59,7 @@ export default function Map() {
             <Marker key={index} position={[point.lat, point.lng]} icon={leafIcon}>
               <Popup>
                 Waste Hotspot <br />
-                <Leaf className="w-6 h-6 inline-block mr-2 text-green-600" />
+                <Leaf className="w-6 h-6 inline-block mr-2 text-blue-600" />
                 High waste generation area
               </Popup>
             </Marker>
