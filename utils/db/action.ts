@@ -97,4 +97,21 @@ export async function getUserByEmail(email: string) {
     }
   }
 
+  export async function updateRewardPoints(userId: number, pointsToAdd: number) {
+    try {
+      const [updatedReward] = await db
+        .update(Rewards)
+        .set({ 
+          points: sql`${Rewards.points} + ${pointsToAdd}`,
+          updatedAt: new Date()
+        })
+        .where(eq(Rewards.userId, userId))
+        .returning()
+        .execute();
+      return updatedReward;
+    } catch (error) {
+      console.error("Error updating reward points:", error);
+      return null;
+    }
+  }
   
