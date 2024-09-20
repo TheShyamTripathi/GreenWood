@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
-import { Button } from "@/components/ui/button"
+import { Button } from "@greenwood/components/ui/button"
 import { MapPin, Trash, Coins, Medal, Settings, Home, Car } from "lucide-react"
 
 const sidebarItems = [
