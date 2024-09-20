@@ -21,6 +21,6 @@
       "@greenwood/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "utils/db/dbConfig.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "utils/db/dbConfig.jsx","declaration.d.ts"],
   "exclude": ["node_modules"]
 }
