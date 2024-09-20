@@ -1,10 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Trash2, MapPin, CheckCircle, Clock, ArrowRight, Camera, Upload, Loader, Calendar, Weight, Search } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@greenwood/components/ui/button'
+import { Input } from '@greenwood/components/ui/input'
 import { toast } from 'react-hot-toast'
-import { getWasteCollectionTasks, updateTaskStatus, saveReward, saveCollectedWaste, getUserByEmail } from '@/utils/db/actions'
+import { getWasteCollectionTasks, updateTaskStatus, saveReward, saveCollectedWaste, getUserByEmail } from '@greenwood/utils/db/action'
 import { GoogleGenerativeAI } from "@google/generative-ai"
 
 // Make sure to set your Gemini API key in your environment variables
