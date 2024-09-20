@@ -229,4 +229,59 @@ export async function getCollectedWastesByCollector(collectorId: number) {
       return [];
     }
   }
+
+  export async function getAllRewards() {
+    try {
+      const rewards = await db
+        .select({
+          id: Rewards.id,
+          userId: Rewards.userId,
+          points: Rewards.points,
+          level: Rewards.level,
+          createdAt: Rewards.createdAt,
+          userName: Users.name,
+        })
+        .from(Rewards)
+        .leftJoin(Users, eq(Rewards.userId, Users.id))
+        .orderBy(desc(Rewards.points))
+        .execute();
+  
+      return rewards;
+    } catch (error) {
+      console.error("Error fetching all rewards:", error);
+      return [];
+    }
+  }
+  
+  export async function getRewardTransactions(userId: number) {
+    try {
+      console.log('Fetching transactions for user ID:', userId)
+      const transactions = await db
+        .select({
+          id: Transactions.id,
+          type: Transactions.type,
+          amount: Transactions.amount,
+          description: Transactions.description,
+          date: Transactions.date,
+        })
+        .from(Transactions)
+        .where(eq(Transactions.userId, userId))
+        .orderBy(desc(Transactions.date))
+        .limit(10)
+        .execute();
+  
+      console.log('Raw transactions from database:', transactions)
+  
+      const formattedTransactions = transactions.map(t => ({
+        ...t,
+        date: t.date.toISOString().split('T')[0], // Format date as YYYY-MM-DD
+      }));
+  
+      console.log('Formatted transactions:', formattedTransactions)
+      return formattedTransactions;
+    } catch (error) {
+      console.error("Error fetching reward transactions:", error);
+      return [];
+    }
+  }
   
