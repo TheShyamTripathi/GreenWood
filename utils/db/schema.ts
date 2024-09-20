@@ -45,4 +45,13 @@ export const CollectedWastes = pgTable("collected_wastes", {
     status: varchar("status", { length: 20 }).notNull().default("collected"),
   });
 
-  
+
+// Notifications table
+export const Notifications = pgTable("notifications", {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id").references(() => Users.id).notNull(),
+    message: text("message").notNull(),
+    type: varchar("type", { length: 50 }).notNull(),
+    isRead: boolean("is_read").notNull().default(false),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  }); 
