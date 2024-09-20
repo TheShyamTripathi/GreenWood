@@ -162,4 +162,71 @@ export async function getCollectedWastesByCollector(collectorId: number) {
       console.error("Error marking notification as read:", error);
     }
   }
+
+
+
+  export async function getPendingReports() {
+    try {
+      return await db.select().from(Reports).where(eq(Reports.status, "pending")).execute();
+    } catch (error) {
+      console.error("Error fetching pending reports:", error);
+      return [];
+    }
+  }
+  
+  export async function updateReportStatus(reportId: number, status: string) {
+    try {
+      const [updatedReport] = await db
+        .update(Reports)
+        .set({ status })
+        .where(eq(Reports.id, reportId))
+        .returning()
+        .execute();
+      return updatedReport;
+    } catch (error) {
+      console.error("Error updating report status:", error);
+      return null;
+    }
+  }
+  
+  export async function getRecentReports(limit: number = 10) {
+    try {
+      const reports = await db
+        .select()
+        .from(Reports)
+        .orderBy(desc(Reports.createdAt))
+        .limit(limit)
+        .execute();
+      return reports;
+    } catch (error) {
+      console.error("Error fetching recent reports:", error);
+      return [];
+    }
+  }
+  
+  export async function getWasteCollectionTasks(limit: number = 20) {
+    try {
+      const tasks = await db
+        .select({
+          id: Reports.id,
+          location: Reports.location,
+          wasteType: Reports.wasteType,
+          amount: Reports.amount,
+          status: Reports.status,
+          date: Reports.createdAt,
+          collectorId: Reports.collectorId,
+        })
+        .from(Reports)
+        .limit(limit)
+        .execute();
+  
+      return tasks.map(task => ({
+        ...task,
+        date: task.date.toISOString().split('T')[0], // Format date as YYYY-MM-DD
+      }));
+    } catch (error) {
+      console.error("Error fetching waste collection tasks:", error);
+      return [];
+    }
+  }
   
