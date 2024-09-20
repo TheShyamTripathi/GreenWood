@@ -18,7 +18,7 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { createUser, getUnreadNotifications, markNotificationAsRead, getUserByEmail, getUserBalance } from "@/utils/db/actions"
 
-const clientId = process.env.WEB2_AUTH_CLIENT_ID
+const clientId = process.env.WEB3_AUTH_CLIENT_ID
 
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
@@ -210,7 +210,7 @@ export default function Header({ onMenuClick, totalEarnings }: HeaderProps) {
           <Link href="/" className="flex items-center">
             <Leaf className="h-6 w-6 md:h-8 md:w-8 text-green-500 mr-1 md:mr-2" />
             <div className="flex flex-col">
-              <span className="font-bold text-base md:text-lg text-gray-800">Zero2Hero</span>
+              <span className="font-bold text-base md:text-lg text-gray-800">GreenWood</span>
               <span className="text-[8px] md:text-[10px] text-gray-500 -mt-1">ETHOnline24</span>
             </div>
           </Link>
