@@ -10,7 +10,7 @@ import {
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu"
+} from "@greenwood/components/ui/dropdown-menu"
 import { Badge } from "@greenwood/components/ui/badge"
 import { Web3Auth } from "@web3auth/modal"
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base"
