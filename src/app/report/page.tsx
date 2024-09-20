@@ -297,7 +297,7 @@ export default function ReportPage() {
                   value={newReport.location}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                  className="w-full px-4 py-2 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
                   placeholder="Enter waste location"
                 />
               </StandaloneSearchBox>
@@ -369,16 +369,16 @@ export default function ReportPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-black-200">
               {reports.map((report) => (
                 <tr key={report.id} className="hover:bg-gray-50 transition-colors duration-200">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-black-500">
                     <MapPin className="inline-block w-4 h-4 mr-2 text-blue-500" />
                     {report.location}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{report.wasteType}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{report.amount}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{report.createdAt}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-black-500">{report.wasteType}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-black-500">{report.amount}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-black-500">{report.createdAt}</td>
                 </tr>
               ))}
             </tbody>
