@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import {  MapPin, Upload, CheckCircle, Loader } from 'lucide-react'
 import { Button } from '@greenwood/components/ui/button'
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai"
 import { StandaloneSearchBox,  useJsApiLoader } from '@react-google-maps/api'
 import { Libraries } from '@react-google-maps/api';
 import { createUser, getUserByEmail, createReport, getRecentReports } from '@greenwood/utils/db/action';
@@ -12,7 +12,7 @@ import { toast } from 'react-hot-toast'
 const geminiApiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-const libraries: Libraries = ['places'];
+const libraries: Libraries = ['places']
 
 export default function ReportPage() {
   const [user, setUser] = useState<{ id: number; email: string; name: string } | null>(null);
@@ -30,23 +30,24 @@ export default function ReportPage() {
     location: '',
     type: '',
     amount: '',
-  })
+  });
 
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
-  const [verificationStatus, setVerificationStatus] = useState<'idle' | 'verifying' | 'success' | 'failure'>('idle')
-  const [verificationResult, setVerificationResult] = useState<{
+  const [verificationStatus, setVerificationStatus] = useState<'idle' | 'verifying' | 'success' | 'failure'>('idle');
+  
+  const [verificationResult, setVerificationResults] = useState<{
     wasteType: string;
     quantity: string;
     confidence: number;
   } | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [searchBox, setSearchBox] = useState<google.maps.places.SearchBox | null>(null);
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: googleMapsApiKey!,
+    googleMapsApiKey: googleMapsApiKey,
     libraries: libraries
   });
 
@@ -69,20 +70,21 @@ export default function ReportPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setNewReport({ ...newReport, [name]: value })
-  }
+    setNewReport({ ...newReport, [name]: value });
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0]
-      setFile(selectedFile)
-      const reader = new FileReader()
+      setFile(selectedFile);
+      
+      const reader = new FileReader();
       reader.onload = (e) => {
         setPreview(e.target?.result as string)
       }
-      reader.readAsDataURL(selectedFile)
+      reader.readAsDataURL(selectedFile);
     }
-  }
+  };
 
   const readFileAsBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -90,17 +92,17 @@ export default function ReportPage() {
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = reject;
       reader.readAsDataURL(file);
-    });
-  };
+    })
+  }
 
   const handleVerify = async () => {
-    if (!file) return
+    if (!file) return;
 
-    setVerificationStatus('verifying')
+    setVerificationStatus('verifying');
     
     try {
-      const genAI = new GoogleGenerativeAI(geminiApiKey!);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const genAI = new GoogleGenerativeAI(geminiApiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
 
       const base64Data = await readFileAsBase64(file);
 
@@ -125,7 +127,7 @@ export default function ReportPage() {
           "confidence": confidence level as a number between 0 and 1
         }`;
 
-      const result = await model.generateContent([prompt, ...imageParts]);
+      const result = await model.generateContent([prompt, ...imageParts])
       const response = await result.response;
       const text = response.text();
       
@@ -137,7 +139,7 @@ export default function ReportPage() {
           setNewReport({
             ...newReport,
             type: parsedResult.wasteType,
-            amount: parsedResult.quantity
+            amount: parsedResult.quantity,
           });
         } else {
           console.error('Invalid verification result:', parsedResult);
@@ -151,13 +153,13 @@ export default function ReportPage() {
       console.error('Error verifying waste:', error);
       setVerificationStatus('failure');
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (verificationStatus !== 'success' || !user) {
-      toast.error('Please verify the waste before submitting or log in.');
-      return;
+      toast.error('Please verify the waste before submitting or log in')
+      return
     }
     
     setIsSubmitting(true);
@@ -176,7 +178,7 @@ export default function ReportPage() {
         location: report.location,
         wasteType: report.wasteType,
         amount: report.amount,
-        createdAt: report.createdAt.toISOString().split('T')[0]
+        createdAt: report.createdAt.toISOString().split('T')[0],
       };
       
       setReports([formattedReport, ...reports]);
@@ -206,7 +208,7 @@ export default function ReportPage() {
         }
         setUser(user);
         
-        const recentReports = await getRecentReports();
+        const recentReports = await getRecentReports()
         const formattedReports = recentReports.map(report => ({
           ...report,
           createdAt: report.createdAt.toISOString().split('T')[0]
